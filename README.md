@@ -2,7 +2,7 @@
 Improved version from the previous version OLED driver. 
 
 This driver is specifically ported for STM32WB5MMG MCU which will be used for my Motorcycle Helmet Hud Project Repo Link: 
-You can port this to your desired STM32 MCU by changing the HAL header file to your desired MCU. You will also need to change the I2C peripheral handle.
+\nYou can port this to your desired STM32 MCU by changing the HAL header file to your desired MCU. You will also need to change the I2C peripheral handle.
 
 Integrates new functionalities to allow for glyph rendering and animation:
 1. oled_drawBMP: Renders a monochrome bitmap glyph to the OLED screen at specified (x,y) coordinate.
