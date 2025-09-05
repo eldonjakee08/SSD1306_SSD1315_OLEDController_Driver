@@ -13,7 +13,7 @@ Integrates new functionalities to allow for glyph rendering and animation:
 3. oled_RenderGlyph: Renders a glyph to the OLED screen using the glyph metadata structure.<br>
    
 *NOTE*
-1. This driver is currently set-up for 128x64px OLED displays. You will need to port this to your desired OLED screen resolution by changing the OLED "WIDTH" and "HEIGHT" in the ssd1306_ssd1315.h. You'd also need to add/subtract elements in the OLED_screenBuffer to match your OLED screen resolution.
+1. This driver is currently set-up for 128x64px OLED displays. You will need to port this to your desired OLED screen resolution by changing the OLED "WIDTH" and "HEIGHT" in the ssd1306_ssd1315.h header file. You'd also need to add/subtract elements in the OLED_screenBuffer to match your OLED screen resolution.
 
 2. This driver only supports I2C protcol to communicate with the OLED controller.
 
