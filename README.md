@@ -1,16 +1,16 @@
-# STM32_ssd1306_ssd1315_OLED_Driver
-From Scratch STM32F4 ssd1306 &amp; ssd1315 OLED Driver (no HAL)
+#SSD1306_SSD1315_OLEDcontroller_Driver
+Improved version from the previous version OLED driver. 
 
-This is my take on SSD1306/SSD1315 OLED driver for STM32F4 processors
-Everything is made from scratch, no STM32 HAL used. 
-The I2C driver used on this library is my personal driver that I've developed (Bare Metal).
-This is a testing ground to see if my I2C library works in real world applications.
-I took inspiration from Afiskon's STM32 SSD1306 OLED driver when developing this.
-But his version uses STM32 I2C HAL github link: https://github.com/afiskon/stm32-ssd1306.
+This driver is specifically ported for STM32WB5MMG MCU which will be used for my Motorcycle Helmet Hud Project Repo Link: 
+You can port this to your desired STM32 MCU by changing the HAL header file to your desired MCU. You will also need to change the I2C peripheral handle.
 
-***********************!!!!LIMITATIONS!!!!*************************************
-1. This only works for STM32F4 series MCUs. I specifically developed this for NUCLEO F44RE
-2. This is limited only to 128x64 pixel screens. Will add more screen size options in the future
-3. This is only compatible with I2C communication SSD1306/SSD1315 OLED modules. 
-4. For now it only has basic functionality like fill_screen and draw_pixel but I will be adding more functionality in the future.
- 
+Integrates new functionalities to allow for glyph rendering and animation:
+1. oled_drawBMP: Renders a monochrome bitmap glyph to the OLED screen at specified (x,y) coordinate.
+2. oled_clearGlyphRegion: Clears the retangular region that a glyph occupies in the OLED.
+3. oled_RenderGlyph: Renders a glyph to the OLED screen using the glyph metadata structure.
+   
+*NOTE*
+1. This driver is currently set-up for 128x64px OLED displays. You will need to port this to your desired OLED screen resolution by changing the OLED "WIDTH" and "HEIGHT" in the ssd1306_ssd1315.h. You'd also need to add/subtract elements in the OLED_screenBuffer to match your OLED screen resolution.
+2. This driver only supports I2C protcol to communicate with the OLED controller.
+3. Before calling any OLED functions/commands, initialize the OLED first by calling oled_init();. 
+<img width="675" height="450" alt="image" src="https://github.com/user-attachments/assets/852b56be-564e-4caa-b5a3-756aecd3b6f2" />
