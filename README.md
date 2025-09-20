@@ -21,7 +21,7 @@ You can port this to your desired STM32 MCU by changing the HAL header file to y
 <img width="675" height="450" alt="image" src="https://github.com/user-attachments/assets/852b56be-564e-4caa-b5a3-756aecd3b6f2" />
 
 
-# OLED Functions
+# OLED APIs
 **1. oled_init()**
 
 <img width="803" height="108" alt="image" src="https://github.com/user-attachments/assets/618ebbff-2373-450b-b91e-6c916535a8c0" /><br>
