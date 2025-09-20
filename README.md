@@ -1,5 +1,7 @@
 # SSD1306/SSD1315 OLED Driver
-SSD1306/SSD1315 driver ported for STM32WB5MMG MCU which will be used for my MotoHUD Project. Repo Link: https://github.com/eldonjakee08/MOTOHUD_Project
+SSD1306/SSD1315 driver ported for STM32WB5MMG MCU which will be utilized for my MotoHUD Project. 
+
+Repo Link: https://github.com/eldonjakee08/MOTOHUD_Project
 
 You can port this to your desired STM32 MCU by changing the HAL header file to your desired MCU. You will also need to change the I2C peripheral handle.
 
