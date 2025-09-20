@@ -7,7 +7,7 @@ You can port this to your desired STM32 MCU by changing the HAL header file to y
 
 # Limitations
 1. This driver is currently set-up for 128x64px OLED displays. If OLED screen resolution is bigger, change the OLED "WIDTH" and "HEIGHT" macro definition in the ssd1306_ssd1315.h header file. You'd also need to add/subtract elements in the OLED_screenBuffer to match your new OLED screen buffer size.
-<img width="1174" height="237" alt="image" src="https://github.com/user-attachments/assets/fbd6b805-7d6e-439c-a6a1-36cbd84a2218" /><br>
+<img width="1172" height="232" alt="image" src="https://github.com/user-attachments/assets/7a64dadc-6945-4570-8306-db60ef15d14a" /><br>
 
 
 2. This driver only supports I2C protcol to communicate with the OLED controller. Will add SPI communication functionality in the future. 
