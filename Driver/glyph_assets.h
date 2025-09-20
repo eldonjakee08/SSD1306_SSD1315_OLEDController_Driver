@@ -26,6 +26,12 @@ typedef enum {
 	GLYPH_GAUGE_LEVEL_7 = 7,
 	GLYPH_GAUGE_LEVEL_8 = 8,
 	GLYPH_GAUGE_LEVEL_9 = 9,
+	GLYPH_GAUGE_LEVEL_10 = 10,
+	GLYPH_GAUGE_LEVEL_11 = 11,
+	GLYPH_GAUGE_LEVEL_12 = 12,
+	GLYPH_GAUGE_LEVEL_13 = 13,
+	GLYPH_GAUGE_LEVEL_14 = 14,
+	GLYPH_GAUGE_LEVEL_15 = 15,
 	GLYPH_DIGIT_0 = 0,
 	GLYPH_DIGIT_1 = 1,
 	GLYPH_DIGIT_2 = 2,
@@ -99,7 +105,7 @@ extern const uint8_t bluetooth_connected_12x12[24]; 	//bluetooth connected icon 
 extern const uint8_t left_signal_arrow_9x7[9];         	//left signal arrow 9x7 pixels
 extern const uint8_t right_signal_arrow_9x7[9];        	//right signal arrow 9x7 pixels
 extern const uint8_t fuel_bar_gauge_9x35[315];			//fuel bar gauge 9x35 pixels
-extern const uint8_t rpm_bar_gauge_9x44[540];			//rpm bar gauge 9x44 pixels
+extern const uint8_t rpm_bar_gauge_9x44[864];			//rpm bar gauge 9x44 pixels
 
 /*****************************************************
  * Font Assets

@@ -8,7 +8,7 @@
 #ifndef DRIVER_SSD1306_SSD1315_H_
 #define DRIVER_SSD1306_SSD1315_H_
 
-#include "stm32wbxx_hal.h" //change this according to your STM32 series
+#include "stm32wbxx_hal.h" 	//change this according to your STM32 series
 #include "glyph_assets.h"	//glyph assets stored in flash
 
 #include <stddef.h>
@@ -18,14 +18,16 @@
 /*
  * User defined OLED parameters
  */
-#define WIDTH					128			//input OLED width pixels
-#define HEIGHT 					64			//input OLED height pixels
-#define OLED_ADDR				(0x3C << 1)	//input OLED device address left shift by 1 for R/W bit
-#define I2C_OLED_HANDLE             	hi2c1		//input OLED I2C handler name
-
-
+#define WIDTH					128					//input OLED width pixels
+#define HEIGHT 					64					//input OLED height pixels
 #define OLED_BUFFER_SIZE 		( (WIDTH * HEIGHT) / 8 )
-extern I2C_HandleTypeDef hi2c1; //change this according to your I2C handler name
+#define PAGE_LIMIT				HEIGHT / 8          //number of pages OLED has available, each page is 8 pixels high
+
+#define OLED_ADDR				(0x3C << 1)			//input OLED device address left shift by 1 for R/W bit
+#define I2C_OLED_HANDLE         hi2c1				//input OLED I2C peripheral handle  name
+
+
+extern I2C_HandleTypeDef hi2c1; //change this according to your I2C peripheral handle name
 
 
 // Enumeration for screen colors
@@ -56,9 +58,6 @@ typedef enum {
  * function prototypes of APIs
  */
 
-//APIs for communication with OLED
-void oled_WriteCommand(uint8_t *commandByte, size_t command_length);
-void oled_WriteData(uint8_t *pBuffer, size_t bufferSize);
 
 //APIs for drawing into the OLED
 void oled_drawBMP(uint8_t x_start, uint8_t y_start, const uint8_t *glyph, uint8_t glyph_width, uint8_t glyph_height, GlyphRederMode_t mode);

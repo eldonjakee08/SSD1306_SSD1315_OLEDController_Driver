@@ -8,8 +8,12 @@
 
 #include "ssd1306_ssd1315.h"
 
-//command bytes array
+//command bytes buffer array
 static uint8_t command_bytes[3];
+
+//APIs for communication with OLED
+static void oled_WriteCommand(uint8_t *commandByte, size_t command_length);
+static void oled_WriteData(uint8_t *pBuffer, size_t bufferSize);
 
 /*********************************************
  * OLED Screen Buffer, 128X64px
@@ -82,14 +86,15 @@ static uint8_t OLED_ScreenBuffer[OLED_BUFFER_SIZE] = {
 		0x80, 0x80, 0x80, 0xff, 0x80, 0xbf, 0xff, 0xc2, 0xea, 0xea, 0xff, 0xbf, 0xa1, 0x9f, 0x80, 0xff
 };
 
-/*
+
+/********************************************************************
  * @brief: Write command bytes to the OLED through I2C peripheral
  *
  * @param: commandByte: pointer to the command byte array
  *
  * @param: command_length: length of the command byte array
  */
-void oled_WriteCommand(uint8_t *commandByte, size_t command_length) {
+static void oled_WriteCommand(uint8_t *commandByte, size_t command_length) {
 
 	/*
 	 * Sends the command bytes through polling mode
@@ -102,13 +107,13 @@ void oled_WriteCommand(uint8_t *commandByte, size_t command_length) {
 }
 
 
-/*
+/***********************************************************************************************
  * @brief: Write into the GDDRAM of the OLED from the oled_screenbuffer through I2C peripheral
  *
  * @param: pBuffer: pointer to the data buffer to be sent to the OLED
  * @param: bufferSize: size of the data buffer to be sent to the OLED
  */
-void oled_WriteData(uint8_t *pBuffer, size_t bufferSize) {
+static void oled_WriteData(uint8_t *pBuffer, size_t bufferSize) {
 
 	/*
 	 * Writes oled_screenbuffer data to GDDRAM in polling mode.
@@ -120,8 +125,7 @@ void oled_WriteData(uint8_t *pBuffer, size_t bufferSize) {
 }
 
 
-
-/*
+/******************************************************************************
  * @brief Initializes the SSD1306/SSD1315 OLED screen
  */
 void oled_init(void) {
@@ -131,7 +135,7 @@ void oled_init(void) {
 
 	//Sets display to OFF for initialization
 	oled_SetDisplayOn(OFF);
-	HAL_Delay(10); //wait for 10ms
+	HAL_Delay(5); //wait for 5ms, hardware settle
 
 	command_bytes[0] = 0x20; //command for setting memory addressing mode
 	command_bytes[1] = 0x00; //0x00 = horizontal addressing mode, 0x01 = vertical addressing mode, 0x02 = page addressing mode
@@ -206,8 +210,8 @@ void oled_init(void) {
 }
 
 
-/*
- * @breif: Draws a pixel at the specified (x,y) coordinate in the OLED screen buffer
+/************************************************************************************
+ * @brief: Draws a pixel at the specified (x,y) coordinate in the OLED screen buffer
  *
  * @param: x		- x coordinate of the pixel, 0 to 127
  * @param: y		- y coordinate of the pixel, 0 to 63
@@ -230,8 +234,9 @@ void oled_DrawPixel(uint8_t x, uint8_t y, OLED_COLOR color) {
 	}
 }
 
-/*
- * @breif: Fills the entire OLED screen buffer with the specified color
+
+/************************************************************************
+ * @brief: Fills the entire OLED screen buffer with the specified color
  *
  * @param: color - OLED_COLOR ENUM to fill the screen buffer with Black or White
  */
@@ -240,21 +245,20 @@ void oled_Fill(OLED_COLOR color) {
 }
 
 
-/*
- * @breif: Dumps the OLED screen buffer to the OLED GDDRAM through I2C peripheral
+/******************************************************************************
+ * @brief: Dumps the OLED screen buffer data to the OLED GDDRAM
  *
  */
 void oled_UpdateScreen(void) {
 
-	//dump all screen buffer data into GDDRAM
 	oled_WriteData(OLED_ScreenBuffer,OLED_BUFFER_SIZE);
 }
 
 
-/*
- * @breif: Turns the OLED display ON or OFF
+/********************************************************
+ * @brief	Turns the OLED display ON or OFF
  *
- * @param: ONorOff - ON_OFF ENUM to turn the display ON or OFF
+ * @param	ONorOff - ON_OFF ENUM to turn the display ON or OFF
  */
 void oled_SetDisplayOn(ON_OFF ONorOff) {
 
@@ -269,8 +273,8 @@ void oled_SetDisplayOn(ON_OFF ONorOff) {
 }
 
 
-/*
- * @breif: Sets the contrast level of the OLED display
+/****************************************************
+ * @brief: Sets the contrast level of the OLED display
  *
  * @param: contrast - Contrast value from 0x00 to 0xFF
  */
@@ -283,8 +287,9 @@ void oled_SetContrast(uint8_t contrast)	{
 
 }
 
+
 /****************************************************************************************************************
- * @breif: Renders a monochrome bitmap glyph to the OLED screen buffer at specified (x,y) coordinate.
+ * @brief: Renders a pre-rendered monochrome bitmap glyph to the OLED screen at a specified (x,y) coordinate.
  *
  * @param: x_start		- 	starting x coordinate of the glyph, 0 to 127
  *
@@ -416,7 +421,7 @@ void oled_drawBMP(uint8_t x_start, uint8_t y_start, const uint8_t *glyph, uint8_
 			 *
 			 * added condition (page_counter + 1) < 8 to prevent writing outside the OLED_ScreenBuffer & OLED GDDRAM boundaries
 			 */
-			if (carry_glyph_byte != 0 && (page_counter + 1) < 8) {
+			if (carry_glyph_byte != 0 && (page_counter + 1) < PAGE_LIMIT) {
 
 				/*
 				 * similar to previous calculation of index but this time +1 to the page number
@@ -443,19 +448,15 @@ void oled_drawBMP(uint8_t x_start, uint8_t y_start, const uint8_t *glyph, uint8_
 					break;
 				}
 			}
-
-			//uncomment if for debugging purposes
-			//oled_UpdateScreen();
 		}
 
 	}
 
-	//oled_UpdateScreen();
 }
 
 
 /****************************************************************************************************************
- * @breif: Clears the retangular region that a glyph occupies in the OLED.
+ * @brief: Clears a rectangular region that a glyph occupies in the OLED screen.
  *
  * @param: x_start - starting x coordinate of the glyph region, 0 to 127
  *
@@ -525,8 +526,6 @@ void oled_clearGlyphRegion(uint8_t x_start, uint8_t y_start, uint8_t glyph_width
 			mask = end_mask;
 		}
 
-
-
 		//use pointer arithmetic to not have to recalculate the index in every iteration of the inner loop. Optimize performance.
 		uint8_t *OLED_bufferptr = &OLED_ScreenBuffer[x_start + (page_counter * WIDTH)];
 
@@ -540,7 +539,7 @@ void oled_clearGlyphRegion(uint8_t x_start, uint8_t y_start, uint8_t glyph_width
 
 
 /*********************************************************************************
- * @breif: Renders a glyph to the OLED screen buffer using the glyph metadata structure
+ * @brief: Renders a glyph to the OLED screen.
  *
  * @param: glyph_meta 	- 	pointer to the Glyph_Metadata_t structure containing glyph information.
  * 							Ref  @Glyph_Metadata_Structures for available glyphs
@@ -550,7 +549,7 @@ void oled_clearGlyphRegion(uint8_t x_start, uint8_t y_start, uint8_t glyph_width
  *							GLYPH_MODE_AND_MASK 	- 	Applies AND mask to the glyph region before rendering the glyph
  *							GLYPH_MODE_TOGGLE  		- 	Toggles the pixels of the glyph
  *							GLYPH_MODE_CLEAR   		- 	Clears the pixels of the glyph region to OFF state
- * @param: GlyphIndex	-	Index of the glyph in the glyph bitmap array to render, this selects which glyph to render if the bitmap array has multiple glyphs stored inside
+ * @param: GlyphIndex	-	Index of the glyph in the bitmap array to render, this selects which glyph to render if the bitmap array contains multiple glyphs
  * 							If glyph bitmap array only contains one glyph, set this parameter to 0.
  *******************************************************************************/
 void oled_RenderGlyph(const Glyph_Metadata_t *glyph_meta, GlyphArray_Index_t GlyphIndex,GlyphRederMode_t mode) {
@@ -573,7 +572,7 @@ void oled_RenderGlyph(const Glyph_Metadata_t *glyph_meta, GlyphArray_Index_t Gly
 
 
 /***********************************************************************************
- * @breif: Clears a glyph in the OLED screen buffer using the glyph metadata structure
+ * @brief: Clears a glyph in the OLED screen.
  *
  * @param: glyph_meta 	- 	pointer to the Glyph_Metadata_t structure containing glyph information
  **********************************************************************************/
